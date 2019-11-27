@@ -1,45 +1,24 @@
 class Brave
-    def name=(name)
-        @name = name
-    end
 
-    def name 
-        @name
-    end
+     # attr_readerの記述でゲッターを省略することができる
+        attr_reader :name, :offense, :defense
+        attr_accessor :hp
 
-    def hp=(hp)
-        @hp = hp
-    end
-
-    def hp
-        @hp
-    end
-
-    def offense=(offense)
-        @offense = offense
-    end
-
-    def offense
-        @offense
-    end
-
-    def defense=(defense)
-        @defense = defense
-    end
-
-    def defense
-        @defense
+    #paramsで一括で受け取る
+    def initialize(params)
+        #各パラメーターをハッシュで取得
+        @name = params[:name]
+        @hp = params[:hp]
+        @offense = params[:offense]
+        @defense = params[:defense]
     end
 end
 
-brave = Brave.new
-
-brave.name = 'テリー'
-brave.hp = 500
-brave.offense = 150
-brave.defense = 100
+brave = Brave.new(name: "テリー", hp: 500, offense: 150, defense: 100)
 
 puts "NAME:#{brave.name}"
 puts "HP:#{brave.hp}"
 puts "OFFENSE:#{brave.offense}"
 puts "DEFENSE:#{brave.defense}"
+
+brave.hp -= 30
