@@ -18,22 +18,48 @@ class Brave
         # monster.hp = monster.hp - damage
         puts "#{@name}の攻撃!"
 
-        attack_num = rand(4)
+        attack_type = decision_attack_type
+        damage = calculate_damage(target: monster,attack_type: attack_type)
+        cause_damage(target: monster,damage: damage)
 
-        if attack_num == 0
-            puts "必殺!!"
-            damage = calculate_special_attack - monster.defense
-        else   
-            puts "通常攻撃"
-            damage = @offense - monster.defense
-        end
-
-
-        monster.hp -= damage
-
-        puts "#{monster.name}は#{damage}のダメージを受けた!"
-        puts "#{monster.name}の残りHPは#{monster.hp}だ"
+        puts "#{@name}の残りHPは#{monster.hp}だ"
     end
+
+    private
+
+
+    def decision_attack_type
+
+        attack_num = rand(4)
+            if attack_num == 0
+                puts '必殺!!ギガスラッシュ!!'
+                "special_attack"
+            else
+                puts '通常攻撃'
+                "normal_attack"
+            end
+
+    end
+
+      def calculate_damage(params)
+        target = params[:target]
+        attack_type = params[:attack_type]
+
+        if attack_type == "special_attack"
+          calculate_special_attack - target.defense
+        else
+          @offense - target.defense
+        end
+      end
+
+      def cause_damage(params)
+
+        damage = params[:damage]
+        target = params[:target]
+
+        target.hp -= damage
+        puts "#{target.name}は#{damage}のダメージを受けた"
+      end
 
     def calculate_special_attack
         @offense * SPECIAL_ATTACK_CONSTANT
@@ -69,15 +95,27 @@ class Monster
         end
 
         puts "#{@name}の攻撃"
-            damage = @offense - brave.defense
-            brave.hp -= damage
+            damage = calculate_damage(brave)
+            cause_damage(target: brave, damage: damage)
 
-            puts "#{brave.name}は#{damage}のダメージを受けた!"
             puts "#{brave.name}の残りHPは#{brave.hp}だ"
 
     end
 
     private
+
+    def cause_damage(params)
+        damage = params[:damage]
+        target = params[:target]
+
+        target.hp -= damage
+        puts "#{target.name}は#{damage}のダメージを受けた!"
+    end
+
+    def calculate_damage(target)
+        @offense - target.defense
+    end
+
     def transform
         transform_name = "ドラゴン"
 
@@ -85,6 +123,7 @@ class Monster
       puts <<~EOS
       #{@name}は怒っている
       #{@name}は#{transform_name}に変身した
+      #{transform_name}は力を溜めている...
       EOS
 
       # モンスターの攻撃力を1.5倍にする
